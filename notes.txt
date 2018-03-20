@@ -1,0 +1,76 @@
+When doing 
+	r1 = requests.get("https://www.dpss.umich.edu/content/crime-safety-data/daily-crime-fire-log/#")
+	print(r1.text)
+There's some JavaScript shenanigans
+	getCrimeLog(date)
+	getCrimeLog(current)
+In the Chrome browser, instead of the Elements tab, move over to the Console
+tab and execute 
+	getCrimeLog("mm/dd/yyyy")
+ex
+	getCrimeLog("03/14/2007")
+
+
+To scrape the js shenanigans, selenium plugin is highly recommended
+A tutorial can be found here:
+https://medium.com/the-andela-way/introduction-to-web-scraping-using-selenium-7ec377a8cf72
+
+HTML+CSS+JS Structure Excerpts
+
+    $(document).ready(function() {        
+        var currentDate = new Date();
+        var day = currentDate.getDate();
+        var month = currentDate.getMonth()+1;
+        var year = currentDate.getFullYear();
+        var current = month + "/" + day + "/" + year;
+    
+        getCrimeLog(current);
+        
+        $( "#datepicker" ).datepicker({
+            onSelect: function (date, obj) {
+                current = date;
+                getCrimeLog(current);
+            }              
+        });
+    });
+     
+    function getCrimeLog(date) {
+        
+        $("#loading-div-background").show();    
+        var url = "/api/GetCrimeLogCache?date=" + date;
+        
+        //populate crime log
+        $("#results").empty();
+
+        $.getJSON(url, function(result){
+            
+            $("#results").append("<h2 class='crime-fire-log-title'>Crime and Fire Log for " + date + "<h2>");
+            if(result.count == 0) {
+                $("#results").append("&nbsp; &nbsp; No calls for service at this time. Check back later for new entries.");
+                $("#loading-div-background").hide();
+            } else {
+
+              $("#results").append("<table>");
+
+              $.each(result.data, function(i, field){
+
+                  $("#results").append("<tr class=\"crime\"><td colspan=\"2\">" + moment(field.date).format("M/DD/YYYY hh:mm a")+ "</td></tr>");
+                  $("#results").append("<tr class=\"crime\"><td><b class=\"dark\">" + field.description + "</b></td> <td>CAD# " + field.id + "</td></tr>");             
+                  $("#results").append("<tr class=\"crime\"><td colspan=\"2\">" + field.location + "</td></tr>");
+                  $("#results").append("<tr class=\"crime\"><td colspan=\"2\">" + field.address + "</td></tr>");
+                  $("#results").append("<tr class=\"crime\"><td colspan=\"2\"> &nbsp; </td></tr>");
+                  $("#results").append("<tr class=\"crime\"><td colspan=\"2\">" + field.narrative + "</td></tr>");
+                  $("#results").append("<tr class=\"crime\"><td colspan=\"2\"> &nbsp; </td></tr>");
+                  $("#results").append("<tr class=\"crime\"><td colspan=\"2\"><b class=\"dark\">" + field.disposition + " " + ((field.status!=null) ? field.status:"") + ((field.arrest!=null) ? " with <b>arrest made on " +field.arrest + "</b>":"") + "</b></td></tr>");
+                  $("#results").append("<tr><td colspan=\"2\"> <hr> </td></tr>");
+              });
+            
+              $("#results").append("</table>");
+              $("#loading-div-background").hide();
+            }
+         });
+    }
+
+
+Translation: It structures internal queries like
+https://dpss.umich.edu/api/GetCrimeLogCache?date=01/10/2017
