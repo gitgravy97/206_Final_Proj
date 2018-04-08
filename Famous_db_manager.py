@@ -13,14 +13,16 @@ except:
 	fame_cache_dict = {}
 
 class Criminal():
-	def __init__(self, name, nation, b_year, astro):
+	def __init__(self, name, nation, b_year, astro, why_fame):
 		self.name = name
 		self.nation = nation
 		self.birth_year = b_year
 		self.astro = astro
+		self.fame_cause = why_fame
 	def __str__(self):
 		crim_string = str(self.name) + " " + str(self.nation) + " "
 		crim_string += str(self.birth_year) + " " + str(self.astro)
+		crim_string += " " + str(self.fame_cause)
 		return(crim_string)
 
 def init_Famous_table_prime():
@@ -97,6 +99,19 @@ def Famous_populate():
 	crim_list = Famous_Scrape()
 	for i in crim_list:
 		print(i)
+	conn = sqlite3.connect("206_Final_Proj_DB.db")
+	cur = conn.cursor()
+
+	for i in crim_list:
+		insert = """
+			INSERT INTO Famous (name, nationality, fame_cause, sun_sign, birth_year)
+			VALUES (?,?,?,?,?)
+		"""
+		params = (i.name, i.nation, i.fame_cause, i.astro, i.birth_year)
+		cur.execute(insert, params)
+
+	conn.commit()
+	conn.close()
 
 def Famous_Cache(fame_url):
 	#print(fame_cache_dict.keys())
@@ -181,22 +196,27 @@ def Famous_Scrape():
 				#print("Famous as:")
 				iter_fame_reason = i.text[10:].strip()
 				#print(iter_fame_reason)
-			if("Nationality" in i.text):
+			elif("Nationality" in i.text):
 				#print("Nationality:")
 				iter_nation = i.text[13:].strip()
 				#print(iter_nation)
-			if("Birthday" in i.text):
+			elif("Birthday" in i.text):
 				#print("Birthyear:")
 				iter_birth = i.text[-4:].strip()
 				#print(iter_birth)
-			if("Sun Sign" in i.text):
+			# ENSURE to include the : to avoid getting "Born In:[location]"
+			elif("Born:" in i.text):
+				iter_birth = i.text[5:].strip()
+				print(iter_name)
+				print(iter_birth)
+			elif("Sun Sign" in i.text):
 				#print("Sun Sign:")
 				iter_astro = i.text[9:].strip()
 				#print(iter_astro)
 		
 		# Part II-F) Consolidate into an object
 		New_Crim = Criminal(name=iter_name, nation=iter_nation, 
-			b_year=iter_birth, astro=iter_astro)
+			b_year=iter_birth, astro=iter_astro, why_fame=iter_fame_reason)
 		criminal_list.append(New_Crim)
 		#print("xxxxx"*14)
 
@@ -204,7 +224,6 @@ def Famous_Scrape():
 	#	print(i)
 	
 	return(criminal_list)
-
 
 if(__name__=="__main__"):
 	print("Famous_db_manager as __main__")
