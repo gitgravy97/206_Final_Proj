@@ -97,8 +97,8 @@ def Famous_table_empty_check():
 
 def Famous_populate():
 	crim_list = Famous_Scrape()
-	for i in crim_list:
-		print(i)
+	#for i in crim_list:
+	#	print(i)
 	conn = sqlite3.connect("206_Final_Proj_DB.db")
 	cur = conn.cursor()
 
