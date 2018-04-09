@@ -1,7 +1,7 @@
 #print("DPSS_db_manager.py loaded")
 import sqlite3
 
-def init_DPSS_table_prime():
+def init_DPSS_table():
 	conn = sqlite3.connect("206_Final_Proj_DB.db")
 	cur = conn.cursor()
 

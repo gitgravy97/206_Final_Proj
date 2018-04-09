@@ -19,14 +19,21 @@ except Error as e:
 	print(e)
 """
 
-def init_database():	
-	DPSS_DB.init_DPSS_table_prime()
-	FAME_DB.init_Famous_table_prime()
+def init_database():
+	print(". . . . . "*5)	
+	DPSS_DB.init_DPSS_table()
+	
+	print(". . . . . "*5)
+	FAME_DB.init_Famous_table()
 	# Only call FAME_DB.Famous_Scrape if db is empty
 	#FAME_DB.Famous_Scrape()
 	if(FAME_DB.Famous_table_empty_check()):
-		FAME_DB.Famous_populate()
-
+		FAME_DB.Famous_table_populate()
+	
+	print(". . . . . "*5)
+	FBI_DB.init_FBI_table()
+	if(FBI_DB.FBI_table_empty_check()):
+		FBI_DB.FBI_table_populate()
 
 if(__name__=="__main__"):
 	print("Core.py as __main__")

@@ -25,7 +25,7 @@ class Criminal():
 		crim_string += " " + str(self.fame_cause)
 		return(crim_string)
 
-def init_Famous_table_prime():
+def init_Famous_table():
 	conn = sqlite3.connect("206_Final_Proj_DB.db")
 	cur = conn.cursor()
 
@@ -95,7 +95,7 @@ def Famous_table_empty_check():
 		print("Table \"Famous\" not empty.")
 		return(False)
 
-def Famous_populate():
+def Famous_table_populate():
 	crim_list = Famous_Scrape()
 	#for i in crim_list:
 	#	print(i)
@@ -207,8 +207,8 @@ def Famous_Scrape():
 			# ENSURE to include the : to avoid getting "Born In:[location]"
 			elif("Born:" in i.text):
 				iter_birth = i.text[5:].strip()
-				print(iter_name)
-				print(iter_birth)
+				#print(iter_name)
+				#print(iter_birth)
 			elif("Sun Sign" in i.text):
 				#print("Sun Sign:")
 				iter_astro = i.text[9:].strip()
