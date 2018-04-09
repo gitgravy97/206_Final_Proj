@@ -6,6 +6,9 @@ import sqlite3
 
 # Exterior text file containing FBI API Key for HTTP Verification
 import FBI_API_Key
+# Exterior text file containing FBI classification breakdown for
+# mapping data to crime classification
+import FBI_Class_Lists
 
 def init_FBI_table():
 	conn = sqlite3.connect("206_Final_Proj_DB.db")
@@ -39,7 +42,7 @@ def init_FBI_table():
 				'year' 			Integer,
 				'frequency'		Integer,
 				'offense' 			Text,
-				'classification'	Text,
+				'classification'	Integer,
 				'perc_of_year'	Integer
 			);
 			"""
@@ -54,7 +57,7 @@ def init_FBI_table():
 			'year' 			Integer,
 			'frequency'		Integer,
 			'offense' 			Text,
-			'classification'	Text,
+			'classification'	Integer,
 			'perc_of_year'	Integer
 		);
 		"""
@@ -126,7 +129,7 @@ def FBI_table_empty_check():
 		return(False)
 
 def FBI_table_populate():
-	crime_since_2012 = FBI_requests()
+	crime_since_2012 = FBI_data_supreme()
 	#for i in crime_since_2012:
 	#	print(i)
 	conn = sqlite3.connect("206_Final_Proj_DB.db")
@@ -134,46 +137,74 @@ def FBI_table_populate():
 
 	for i in crime_since_2012:
 		insert = """
-			INSERT INTO FBI (year, offense, frequency)
-			VALUES (?, ?, ?)
+			INSERT INTO FBI (year, offense, frequency,
+			 classification, perc_of_year)
+			VALUES (?, ?, ?, ?, ?)
 		"""
-		params = (i["year"], i["offense_name"], i["count"])
+		params = (i["year"], i["offense_name"], i["count"],
+			i["classification"], i["annual_perc"])
 		cur.execute(insert, params)
 	conn.commit()
 	conn.close()
 
-def FBI_table_substantiate_classification():
+def FBI_data_add_classification(basic_dict):
 	# Look at field "offense"
 	# These will need to map to two separate, mutually-exclusive lists
 	# Lists to map to will need to be hard-coded
 	# Once mapped as a List A crime or a List B crime, insert a value
 	# for that row under the "classification" field
-	pass
 
-def FBI_table_substantiate_annual_percentage():
-	# Look at fields "frequency" and "year"
-	# For each row, find frequency of that row
-	# Find total frequency for the year of that row
-	# Divide frequency of that item by frequency for the year
-	# Insert it the percentage value into the row under
-	# the "perc_or_year" field
-	crime_since_2012 = FBI_requests()
+	# See proposal hyperlink to see FBI constitution of class
+	# differentiation
+
+	class_i = FBI_Class_Lists.class_i
+	class_ii = FBI_Class_Lists.class_ii
+
+	#print(len(class_i))
+	#print(len(class_ii))
+
+	for i in basic_dict:
+		if(i["offense_name"] in class_i):
+			i["classification"] = 1
+			#print("Class 1")
+		elif(i["offense_name"] in class_ii):
+			i["classification"] = 2
+			#print("Class 2")
+		else:
+			print("Class Unlisted")
+			print(i["offense_name"])
+			assert(False)
+
+	#for i in basic_dict:
+	#	print(i)
+	return(basic_dict)
+	# # # # # Function End # # # # #
+
+# Returns the crime dictionary with each entry gaining a new key
+# dict["annual_perc"] = % of the year's crime attributed to this offense
+def FBI_data_add_annual_percentage(basic_dict):
 	freqs = {2012:0, 2013:0, 2014:0, 2015:0, 2016:0}
 	print(freqs)
-	for i in crime_since_2012:
+	for i in basic_dict:
 		freqs[int(i["year"])] += i["count"]
 	print(freqs)
-	for i in crime_since_2012:
-		if(i["year"]=="2012"):
-			print(i["offense_name"])
-			value = int(i["count"])/freqs[int(i["year"])]
-			adjusted_value = round((value*100),4)
-			print(adjusted_value)
+	for i in basic_dict:
+		value = int(i["count"])/freqs[int(i["year"])]
+		adjusted_value = round((value*100),4)
+		i["annual_perc"] = adjusted_value
+	#for i in basic_dict:
+	#	print(i)
+	return(basic_dict)
 
+def FBI_data_supreme():
+	crime_2012to2016_simple = FBI_requests()
+	aug_1 = FBI_data_add_annual_percentage(crime_2012to2016_simple)
+	aug_2 = FBI_data_add_classification(aug_1)
+	return(aug_2)
 
 if(__name__=="__main__"):
 	print("FBI_db_manager as __main__")
 	if(FBI_table_empty_check()):
 		FBI_table_populate()
 	print("X"*75)
-	FBI_data_substantiate_annual_percentage()
+	#FBI_data_supreme()
