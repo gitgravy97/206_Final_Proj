@@ -150,17 +150,30 @@ def FBI_table_substantiate_classification():
 	# for that row under the "classification" field
 	pass
 
-def FBI_table_substantiate_perc_per_yr():
+def FBI_table_substantiate_annual_percentage():
 	# Look at fields "frequency" and "year"
 	# For each row, find frequency of that row
 	# Find total frequency for the year of that row
 	# Divide frequency of that item by frequency for the year
 	# Insert it the percentage value into the row under
 	# the "perc_or_year" field
-	pass
+	crime_since_2012 = FBI_requests()
+	freqs = {2012:0, 2013:0, 2014:0, 2015:0, 2016:0}
+	print(freqs)
+	for i in crime_since_2012:
+		freqs[int(i["year"])] += i["count"]
+	print(freqs)
+	for i in crime_since_2012:
+		if(i["year"]=="2012"):
+			print(i["offense_name"])
+			value = int(i["count"])/freqs[int(i["year"])]
+			adjusted_value = round((value*100),4)
+			print(adjusted_value)
+
 
 if(__name__=="__main__"):
 	print("FBI_db_manager as __main__")
 	if(FBI_table_empty_check()):
 		FBI_table_populate()
 	print("X"*75)
+	FBI_data_substantiate_annual_percentage()
