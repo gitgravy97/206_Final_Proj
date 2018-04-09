@@ -22,11 +22,11 @@ except Error as e:
 def init_database():
 	print(". . . . . "*5)	
 	DPSS_DB.init_DPSS_table()
+	if(DPSS_DB.DPSS_table_empty_check()):
+		assert(False)
 	
 	print(". . . . . "*5)
 	FAME_DB.init_Famous_table()
-	# Only call FAME_DB.Famous_Scrape if db is empty
-	#FAME_DB.Famous_Scrape()
 	if(FAME_DB.Famous_table_empty_check()):
 		FAME_DB.Famous_table_populate()
 	
