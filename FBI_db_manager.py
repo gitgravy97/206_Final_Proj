@@ -100,7 +100,6 @@ def FBI_cache():
 	req_url += "api_key="
 	
 	complete_req_url = req_url + str(FBI_API_Key.my_key)
-	response = requests.get(complete_req_url)
 
 	if(req_url in FBI_cache_dict):
 		#print("! - Cache Pull - !")
