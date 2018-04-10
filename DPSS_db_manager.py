@@ -337,6 +337,21 @@ def DPSS_table_populate():
 		print(len(DPSS_Dict)) # 943 Entries Total, Seems Correct
 	except:
 		print("Error: DPSS_cache.json not found")
+		DPSS_Dict = {}
+		x = "Either use the copy of my cache OR wait for the "
+		x += "~934 API calls this'll make to build the cache."
+		x += "\nThis API is extremely slow and not meant for "
+		x += "projects like this and you'll wait at least "
+		x += "90 minutes assuming you don't hit time-out issues."
+		x += "\nEntering \"y\" below will let you make this "
+		x += "mistake. Entering \"n\" will exit the program "
+		x += "and allow you to go retrieve the file."
+		print(x)
+		please_no = input("Continue? (y/n): ")
+		if(please_no=="n"):
+			exit()
+		elif(please_no=="y"):
+			Harvest_2015()
 
 	for date in DPSS_Dict:
 		iterable_date_dict = json.loads(DPSS_Dict[date])

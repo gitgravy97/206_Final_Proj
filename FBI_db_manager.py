@@ -183,7 +183,7 @@ def FBI_data_add_classification(basic_dict):
 # dict["annual_perc"] = % of the year's crime attributed to this offense
 def FBI_data_add_annual_percentage(basic_dict):
 	freqs = {2012:0, 2013:0, 2014:0, 2015:0, 2016:0}
-	print(freqs)
+	#print(freqs)
 	for i in basic_dict:
 		freqs[int(i["year"])] += i["count"]
 	print(freqs)

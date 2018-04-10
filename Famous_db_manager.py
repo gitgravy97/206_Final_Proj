@@ -170,6 +170,7 @@ def Famous_Scrape():
 	"""
 
 	#temp_list = criminal_page_urls[0:2]
+	Counter = 0
 	for i in criminal_page_urls:
 		temp_url = "http://" + str(i)
 		#print(temp)
@@ -219,6 +220,8 @@ def Famous_Scrape():
 			b_year=iter_birth, astro=iter_astro, why_fame=iter_fame_reason)
 		criminal_list.append(New_Crim)
 		#print("xxxxx"*14)
+		Counter = Counter + 1
+		print(str(Counter) + " criminals loaded.")
 
 	#for i in criminal_list:
 	#	print(i)
