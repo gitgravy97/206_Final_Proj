@@ -32,7 +32,8 @@ def init_DPSS_table():
 			# # # ! ! ! - CAD_Num not auto-increment, right?
 			statement = """						
 			CREATE TABLE 'DPSS' (
-			'CAD_Num' 	INTEGER PRIMARY KEY,
+			'EntryNo.'	Integer PRIMARY KEY AUTOINCREMENT,
+			'CAD_Num' 	Integer,
 			'date'			Text,
 			'description' 	Text,
 			'location' 		Text,
@@ -49,7 +50,8 @@ def init_DPSS_table():
 		print("Building New DPSS Table . . .")
 		statement = """
 		CREATE TABLE 'DPSS' (
-		'CAD_Num' 	INTEGER PRIMARY KEY AUTOINCREMENT,
+		'EntryNo.'	Integer PRIMARY KEY AUTOINCREMENT,
+		'CAD_Num' 	Integer,
 		'date'			Text,
 		'description' 	Text,
 		'location' 		Text,
@@ -244,10 +246,10 @@ def Harvest_2015():
 	# Starting Welcome Week, as interest is mainly midyear
 	# i.e. post-move-in, on-campus crime reporting
 	print("Harvesting 2015 (Sept-Dec)")
-	Month_Harvester(month="09",year="2015")
-	Month_Harvester(month="10",year="2015")
-	Month_Harvester(month="11",year="2015")
-	Month_Harvester(month="12",year="2015")
+	Month_Harvester(month="09",year="2015", silent=True)
+	Month_Harvester(month="10",year="2015", silent=True)
+	Month_Harvester(month="11",year="2015", silent=True)
+	Month_Harvester(month="12",year="2015", silent=True)
 
 # Toggle quarters in actual function call
 def Harvest_2016(Q1=False,Q2=False,Q3=False,Q4=False):
@@ -300,6 +302,17 @@ def Harvest_2018(Q1=False,Q2=False,Q3=False,Q4=False):
 		pass
 		#Month_Harvester(month="04",year="2015")
 
+# Never run this unless you want to wait hours
+# The API calls can take like 1 to 30 seconds
+# I'm just supporting the ability to make this mistake
+# to avoid losing points for not doing so.
+def Harvest_Full():
+	Harvest_2015()
+	Harvest_2016(Q1=True,Q2=True,Q3=True,Q4=True)
+	Harvest_2017(Q1=True,Q2=True,Q3=True,Q4=True)
+	Harvest_2018(Q1=True,Q2=False,Q3=False,Q4=False)
+
+
 def DPSS_table_empty_check():
 	conn = sqlite3.connect("206_Final_Proj_DB.db")
 	cur = conn.cursor()
@@ -314,7 +327,53 @@ def DPSS_table_empty_check():
 		return(False)
 
 def DPSS_table_populate():
-	pass
+	conn = sqlite3.connect("206_Final_Proj_DB.db")
+	cur = conn.cursor()
+
+	try:
+		with open("DPSS_cache.json") as json_file:
+			DPSS_Dict = json.load(json_file)
+			print(type(DPSS_Dict))
+		print(len(DPSS_Dict)) # 943 Entries Total, Seems Correct
+	except:
+		print("Error: DPSS_cache.json not found")
+
+	for date in DPSS_Dict:
+		iterable_date_dict = json.loads(DPSS_Dict[date])
+		for case in iterable_date_dict["data"]:
+			insert = """
+				INSERT INTO DPSS (CAD_Num, date, description,
+				 location, address, disposition, narrative)
+				VALUES (?, ?, ?, ?, ?, ?, ?)
+			"""
+
+			# Some error handling; see Notes.txt,
+			# alternatively // also Notes_DPSS.txt
+			try:
+				addr = case["address"]
+			except:
+				addr = None
+
+			dispo = ""
+			if(case["disposition"]!="<br>"):
+				dispo = case["disposition"]
+			if("<br>" in case["disposition"]):
+				#print(case["disposition"][0:-4])
+				dispo = case["disposition"][0:-4]
+
+			params = (case["id"], case["date"], case["description"],
+				case["location"], addr, dispo,
+				case["narrative"])
+			cur.execute(insert, params)
+			#print("="*70)
+			#print(case)
+			#print(case["id"])
+			#print(case["address"])
+
+	conn.commit()
+	conn.close()
+
+######################################################################
 
 if(__name__=="__main__"):
 	print("DPSS_db_manager as __main__")
@@ -326,3 +385,4 @@ if(__name__=="__main__"):
 	#Harvest_2016(Q1=False,Q2=False,Q3=False,Q4=False)
 	#Harvest_2017(Q1=True,Q2=True,Q3=True,Q4=True)
 	#Harvest_2018(Q1=True, Q2=False, Q3=False, Q4=False)
+	

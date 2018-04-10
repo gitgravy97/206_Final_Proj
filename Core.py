@@ -7,7 +7,8 @@ import FBI_db_manager as FBI_DB
 
 # Stack Overflow: Apparently double-import risk isn't that bad for Python
 # and it just pulls a cached version if a module has already been imported
-
+# So maybe just import modules in the external files but, if needed, don't 
+# worry about or avoid importing in Core.py as well
 
 print("Core.py")
 """
@@ -23,7 +24,7 @@ def init_database():
 	print(". . . . . "*5)	
 	DPSS_DB.init_DPSS_table()
 	if(DPSS_DB.DPSS_table_empty_check()):
-		assert(False)
+		DPSS_DB.DPSS_table_populate()
 	
 	print(". . . . . "*5)
 	FAME_DB.init_Famous_table()
