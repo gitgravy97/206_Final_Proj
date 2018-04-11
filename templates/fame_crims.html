@@ -1,0 +1,26 @@
+
+<link rel="stylesheet" href="/static/style.css">
+
+<h1> Famous Criminals </h1>
+
+<p><a href="/Vis-1/">Return to Options Menu</a></p>
+<p><a href="/">Return to Homepage</a></p>
+
+<table border=1>
+    <tr>
+        <th>Name</th>
+        <th>Nationality</th>
+        <th>Title</th>
+        <th>Astrological Sign</th>
+        <th>Birth Year</th>
+    </tr>
+{% for i in fame_ppl %}
+    <tr>
+        <td>{{i[1]}}</td>
+        <td>{{i[2]}}</td>
+        <td>{{i[3]}}</td>
+        <td>{{i[4]}}</td>
+        <td>{{i[5]}}</td>
+    </tr>
+{% endfor %}
+</table>
