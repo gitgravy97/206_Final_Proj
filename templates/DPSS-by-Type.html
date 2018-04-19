@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="/static/style.css">
+
+<h1> DPSS Incident Reports: By Incident Type </h1>
+
+<p><a href="/Vis-4">Return to Option Menu</a></p>
+<p><a href="/">Return to Homepage</a></p>
+
+<p>(Note: Based on data from Sept. 1, 2015 to March 31, 2018)</p>
+
+<table border=1>
+    <tr>
+        <th>Incident Category</th>
+        <th>Incidents Reported</th>
+    </tr>
+{% for i in incident_freqs %}
+    <tr>
+        <td>{{i[0]}}</td>
+        <td>{{i[1]}}</td>
+    </tr>
+{% endfor %}
+</table>

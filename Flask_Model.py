@@ -1,4 +1,5 @@
 import Buildings
+import Crime_Tagging
 
 import plotly.graph_objs as go
 import plotly.plotly as py
@@ -87,7 +88,6 @@ def gen_FBI_graph(year_in="2012"):
 	return(x)
 
 # Visualizations with DPSS Data
-
 # BY DORM
 def gen_DPSS_dorm_table(sort_by="Name"):
 	print("DPSS By Dorm Trigger")
@@ -115,18 +115,89 @@ def gen_DPSS_dorm_table(sort_by="Name"):
 		print("name")
 		outbound_dict = sorted(dorm_dict.items(), key=lambda x: x[0],
 			reverse=False)
-		for i in outbound_dict:
-			print(i)
+		#for i in outbound_dict:
+		#	print(i)
 	elif(sort_by=="Freq"):
 		print("freq")
 		outbound_dict = sorted(dorm_dict.items(), key=lambda x: x[1],
 			reverse=True)
-		for i in outbound_dict:
-			print(i)
+		#for i in outbound_dict:
+		#	print(i)
 
 	conn.close()
 	return(outbound_dict)
 
 # BY INCIDENT TYPE
-def gen_DPSS_type_table():
-	pass
+def gen_DPSS_type_table_unrefined(sort_by="Descrip"):
+	print("DPSS By Type Trigger (Refined)")
+	conn = sqlite.connect("206_Final_Proj_DB.db")
+	cur = conn.cursor()
+	statement = """
+	SELECT description, count(description) FROM DPSS 
+	GROUP BY Description
+	"""
+
+	incident_type_counts = []
+	cur.execute(statement)
+	for i in cur:
+		#print(i)
+		if(i[0][0]==" "):
+			strip_prespace = (i[0][1:], i[1])
+			#print(strip_prespace)
+			incident_type_counts.append(strip_prespace)
+		else:
+			incident_type_counts.append(i)
+
+	conn.close()
+
+	incidents_sorted = []
+
+	if(sort_by=="Descrip"):
+		#incidents_sorted = incident_type_counts
+		incidents_sorted = sorted(incident_type_counts,
+			key=lambda x: x[0][0], reverse=False)
+		#for i in incidents_sorted:
+		#	print(i)
+	# Sorting by incident frequency
+	elif(sort_by=="Freq"):
+		incidents_sorted = sorted(incident_type_counts,
+			key=lambda x: x[1], reverse=True)
+	return(incidents_sorted)
+
+def gen_DPSS_type_table_refined(sort_by="Descrip"):
+	print("DPSS By Type Trigger (Refined)")
+	conn = sqlite.connect("206_Final_Proj_DB.db")
+	cur = conn.cursor()
+	statement = """
+	SELECT description, count(description) FROM DPSS 
+	GROUP BY Description
+	"""
+
+	incident_type_counts = []
+	cur.execute(statement)
+	for i in cur:
+		#print(i)
+		if(i[0][0]==" "):
+			strip_prespace = (i[0][1:], i[1])
+			#print(strip_prespace)
+			incident_type_counts.append(strip_prespace)
+		else:
+			incident_type_counts.append(i)
+
+	conn.close()
+
+	refine_type_counts = Crime_Tagging.Crime_Totals(unrefined_counts=incident_type_counts)
+
+	incidents_sorted = []
+
+	if(sort_by=="Descrip"):
+		#incidents_sorted = incident_type_counts
+		incidents_sorted = sorted(incident_type_counts,
+			key=lambda x: x[0][0], reverse=False)
+		#for i in incidents_sorted:
+		#	print(i)
+	# Sorting by incident frequency
+	elif(sort_by=="Freq"):
+		incidents_sorted = sorted(incident_type_counts,
+			key=lambda x: x[1], reverse=True)
+	return(incidents_sorted)

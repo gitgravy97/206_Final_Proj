@@ -25,7 +25,6 @@ and write a single line of code:
 where the API key issued to you goes between the quotation marks.
 >>>>>>>>>>>>>>>>>>>>>>>END<<<<<<<<<<<<<<<<<<<<<<<
 
-
 Use: A call is made that retrieves crime data on frequency of different 
 categories of criminal infractions, specifically as reported within the
 state confines of Michigan.

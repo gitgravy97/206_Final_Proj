@@ -12,7 +12,7 @@ def index():
             <li><a href="/Vis-1"> Visualization I: Famous Criminals - Data Table </a></li>
             <li><a href="/Vis-2"> Visualization II: FBI - Michigan Crime Pie Charts </a></li>
             <li><a href="/Vis-3"> Visualization III: DPSS Dorm Incidents </a></li>
-            <li><a href="/Vis-4"> Visualization IV </a></li>
+            <li><a href="/Vis-4"> Visualization IV: DPSS Incidents by Type </a></li>
         </ul>
     '''
 
@@ -102,12 +102,34 @@ def V3_ByFreq():
 	return(render_template("DPSS-by-Dorm.html",
 		dorm_incidents=incident_data))
 
-
 ######################################################################
 
 @app.route('/Vis-4')
 def V4():
-	return("v4 temp placeholder")
+	return(render_template("Vis-4-Menu.html"))
+
+@app.route('/Vis-4/ByType_raw')
+def V4_ByType_raw():
+	freq_data = Model.gen_DPSS_type_table_unrefined(sort_by="Descrip")
+	return(render_template("DPSS-by-Type.html", incident_freqs=freq_data))
+	#campus_incidents = 5678
+
+@app.route('/Vis-4/ByFreq_raw')
+def V4_ByFreq_raw():
+	freq_data = Model.gen_DPSS_type_table_unrefined(sort_by="Freq")
+	return(render_template("DPSS-by-Type.html", incident_freqs=freq_data))
+
+@app.route('/Vis-4/ByType_refined')
+def V4_ByType_refined():
+	freq_data = Model.gen_DPSS_type_table_refined(sort_by="Descrip")
+	return(render_template("DPSS-by-Type.html", incident_freqs=freq_data))
+	#campus_incidents = 5678
+
+@app.route('/Vis-4/ByFreq_refined')
+def V4_ByFreq_refined():
+	freq_data = Model.gen_DPSS_type_table_refined(sort_by="Freq")
+	return(render_template("DPSS-by-Type.html", incident_freqs=freq_data))
+
 
 ######################################################################
 
