@@ -3,6 +3,9 @@ SI 206 - Winter 2018
 
 Name 	McCoy Doherty
 Uniq	McShaneD
+
+(Note: This looks odd on GitHub's website, maybe revise)
+(Although revision would make it look less cool in Sublime)
 ======================================================================
 Overview && Setup
 ======================================================================
