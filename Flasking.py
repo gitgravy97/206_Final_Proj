@@ -10,7 +10,7 @@ def index():
         <h1>McCoy's SI 206 Final Project</h1>
         <ul>
             <li><a href="/Vis-1"> Visualization I: Famous Criminals - Data Table </a></li>
-            <li><a href="/Vis-2"> Visualization II: FBI Pie Charts </a></li>
+            <li><a href="/Vis-2"> Visualization II: FBI - Michigan Crime Pie Charts </a></li>
             <li><a href="/Vis-3"> Visualization III: DPSS Dorm Incidents </a></li>
             <li><a href="/Vis-4"> Visualization IV </a></li>
         </ul>
