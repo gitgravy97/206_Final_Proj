@@ -7,11 +7,11 @@ app = Flask(__name__)
 def index():
     return '''
         <img src="/static/blockM.png"/>
-        <h1>McCoy's SI 206 Final Project!</h1>
+        <h1>McCoy's SI 206 Final Project</h1>
         <ul>
             <li><a href="/Vis-1"> Visualization I: Famous Criminals - Data Table </a></li>
             <li><a href="/Vis-2"> Visualization II: FBI Pie Charts </a></li>
-            <li><a href="/Vis-3"> Visualization III </a></li>
+            <li><a href="/Vis-3"> Visualization III: DPSS Dorm Incidents </a></li>
             <li><a href="/Vis-4"> Visualization IV </a></li>
         </ul>
     '''
@@ -87,8 +87,21 @@ def V2_2016():
 ######################################################################
 
 @app.route('/Vis-3')
-def V3():
-	return("v3 temp placeholder")
+def V3_Menu():
+	return(render_template("Vis-3-Menu.html"))
+
+@app.route('/Vis-3/ByDorm')
+def V3_ByDorm():
+	incident_data = Model.gen_DPSS_dorm_table(sort_by="Name")
+	return(render_template("DPSS-by-Dorm.html",
+		dorm_incidents=incident_data))
+
+@app.route('/Vis-3/ByFreq')
+def V3_ByFreq():
+	incident_data = Model.gen_DPSS_dorm_table(sort_by="Freq")
+	return(render_template("DPSS-by-Dorm.html",
+		dorm_incidents=incident_data))
+
 
 ######################################################################
 

@@ -1,3 +1,5 @@
+import Buildings
+
 import plotly.graph_objs as go
 import plotly.plotly as py
 import plotly.tools as tls
@@ -85,3 +87,46 @@ def gen_FBI_graph(year_in="2012"):
 	return(x)
 
 # Visualizations with DPSS Data
+
+# BY DORM
+def gen_DPSS_dorm_table(sort_by="Name"):
+	print("DPSS By Dorm Trigger")
+	conn = sqlite.connect("206_Final_Proj_DB.db")
+	cur = conn.cursor()
+	statement = """
+	SELECT location FROM DPSS
+	"""
+	
+	cur.execute(statement)
+	
+	Dorm_Incidents = []
+	for i in cur:
+		if(i[0] in Buildings.All_Dorm_Buildings):
+			Dorm_Incidents.append(i)
+	#print(len(Dorm_Incidents))
+
+	#for i in Dorm_Incidents:
+	#	print(i)
+
+	dorm_dict = Buildings.Dorm_Totals(Dorm_Incidents)
+
+	outbound_dict = {}
+	if(sort_by=="Name"):
+		print("name")
+		outbound_dict = sorted(dorm_dict.items(), key=lambda x: x[0],
+			reverse=False)
+		for i in outbound_dict:
+			print(i)
+	elif(sort_by=="Freq"):
+		print("freq")
+		outbound_dict = sorted(dorm_dict.items(), key=lambda x: x[1],
+			reverse=True)
+		for i in outbound_dict:
+			print(i)
+
+	conn.close()
+	return(outbound_dict)
+
+# BY INCIDENT TYPE
+def gen_DPSS_type_table():
+	pass
