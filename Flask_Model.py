@@ -189,15 +189,14 @@ def gen_DPSS_type_table_refined(sort_by="Descrip"):
 	refine_type_counts = Crime_Tagging.Crime_Totals(unrefined_counts=incident_type_counts)
 
 	incidents_sorted = []
-
 	if(sort_by=="Descrip"):
 		#incidents_sorted = incident_type_counts
-		incidents_sorted = sorted(incident_type_counts,
+		incidents_sorted = sorted(refine_type_counts.items(),
 			key=lambda x: x[0][0], reverse=False)
 		#for i in incidents_sorted:
 		#	print(i)
 	# Sorting by incident frequency
 	elif(sort_by=="Freq"):
-		incidents_sorted = sorted(incident_type_counts,
+		incidents_sorted = sorted(refine_type_counts.items(),
 			key=lambda x: x[1], reverse=True)
 	return(incidents_sorted)
