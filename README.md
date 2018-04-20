@@ -17,13 +17,13 @@ This API requires an API key be passed in to make the requests.
 If you go to the following link and scroll slightly down the page,
 it will just give you an API key to use.
 
->>>>>>>>>>>>>>>>>>>>IMPORTANT<<<<<<<<<<<<<<<<<<<<
+====================IMPORTANT====================
 [ Link: https://crime-data-explorer.fr.cloud.gov/api ]
 Create a new file called "FBI_API_Key.py" in the project's main directory
 and write a single line of code:
 	my_key = ""
 where the API key issued to you goes between the quotation marks.
->>>>>>>>>>>>>>>>>>>>>>>END<<<<<<<<<<<<<<<<<<<<<<<
+=======================END=======================
 
 Use: A call is made that retrieves crime data on frequency of different 
 categories of criminal infractions, specifically as reported within the
@@ -47,7 +47,7 @@ javascript, I read the page's code and came to understand how I could just
 call the API directly with my code.
 [ Link: https://www.dpss.umich.edu/content/crime-safety-data/daily-crime-fire-log/ ]
 
->>>>>>>>>>>>>>>>>>>>IMPORTANT<<<<<<<<<<<<<<<<<<<<
+====================IMPORTANT====================
 This API has absolutely horrible response times and it has to call each
 individual day. I've pulled all of the data for my target range, September
 1st of 2015 to March 31st of 2018, and cached it. It took a lot of time
@@ -64,7 +64,7 @@ Feel free to delete
 	FBI_cache.json
 But I would seriously recommend keeping
 	DPSS_cache.json
->>>>>>>>>>>>>>>>>>>>>>>END<<<<<<<<<<<<<<<<<<<<<<<
+=======================END=======================
 ======================================================================
 Running the Project
 ======================================================================
@@ -176,9 +176,8 @@ It also has a function, Dorm_Totals(), which takes a single parameter,
 all_dorm_incidents, and then uses dictionary aggregation to count the
 incident frequencies for each dorm.
 
-======================================================================
-Next Steps
-======================================================================
+=============================[ Next Steps ]=============================
+
 I hope to clean up some of the DPSS_db_manager.py file and include more
 comments to make things more understandable, because looking back at it
 after having not opened it in a while, it seems to need some clarification.
@@ -204,6 +203,4 @@ Another feature I want to implement is the ability to insert a date
 or range of dates and return all incident reports for that date or
 span of dates.
 
-======================================================================
-The End
-======================================================================
+==============================[ The End ]==============================
