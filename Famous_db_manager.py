@@ -148,7 +148,7 @@ def Famous_Scrape():
 	
 	
 		for i in index_elems:
-			#print(i.text)
+			# print(i.text)
 			# Reason: URL's stored seem to be prepended by "//"
 			criminal_page_urls.append(i["href"][2:])
 	#print(criminal_page_urls)
@@ -160,14 +160,6 @@ def Famous_Scrape():
 	# and then build Criminal objects to populate criminal_list
 	
 	criminal_list = []
-
-	"""
-	NOTE - For full range, in the below loop use criminal_page_urls
-	To speed things up, you can use a temporary list splite like 
-	as is commented-out below
-	However, doing so seems to overwrite things so you actually lose
-	cached pages that weren't used in the last run
-	"""
 
 	#temp_list = criminal_page_urls[0:2]
 	Counter = 0

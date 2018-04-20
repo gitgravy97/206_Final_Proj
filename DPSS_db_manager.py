@@ -117,6 +117,7 @@ def Investigate_Total_Cached_Incidents():
 	print("Date of Highest Incident Count: "+str(highest_count_date))
 	print("With " + str(highest_count) + " incidents.")
 	print("====="*15)
+	return(highest_count)
 
 # Inputs : mm, yyyy
 def Month_Harvester(month, year, silent=True):

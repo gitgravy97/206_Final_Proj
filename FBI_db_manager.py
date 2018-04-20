@@ -70,7 +70,7 @@ def FBI_requests():
 	#print(response)
 	#print(response.text)
 	data_dict = json.loads(response)
-	print("Total Entries: "+str(len(data_dict["results"])))
+	#print("Total Entries: "+str(len(data_dict["results"])))
 
 	relevant_yrs = []
 	for i in data_dict["results"]:
@@ -186,7 +186,7 @@ def FBI_data_add_annual_percentage(basic_dict):
 	#print(freqs)
 	for i in basic_dict:
 		freqs[int(i["year"])] += i["count"]
-	print(freqs)
+	#print(freqs)
 	for i in basic_dict:
 		value = int(i["count"])/freqs[int(i["year"])]
 		adjusted_value = round((value*100),4)
